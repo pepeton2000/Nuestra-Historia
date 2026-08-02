@@ -677,6 +677,62 @@ export default class GameScene extends Phaser.Scene {
 
         this.keys=this.input.keyboard.createCursorKeys();
 
+        this.moveTarget=null;
+
+        this.input.on(
+
+            "pointerdown",
+
+            (pointer)=>{
+
+                if(!this.player){
+
+                    return;
+
+                }
+
+                const worldPoint=this.cameras.main.getWorldPoint(pointer.x,pointer.y);
+
+                this.moveTarget={
+
+                    x:worldPoint.x,
+
+                    y:worldPoint.y
+
+                };
+
+            },
+
+            this
+
+        );
+
+        this.input.on(
+
+            "pointermove",
+
+            (pointer)=>{
+
+                if(pointer.isDown && this.player){
+
+                    const worldPoint=this.cameras.main.getWorldPoint(pointer.x,pointer.y);
+
+                    this.moveTarget={
+
+                        x:worldPoint.x,
+
+                        y:worldPoint.y
+
+                    };
+
+                }
+
+            },
+
+            this
+
+        );
+
         this.audioActivo=true;
 
         let botonAudio=this.add.text(
@@ -755,7 +811,6 @@ export default class GameScene extends Phaser.Scene {
 
         );
 
-        this.createButtons();
 
 
     }
@@ -1365,33 +1420,63 @@ export default class GameScene extends Phaser.Scene {
 
     update(){
 
-        const speed=200;
+        const speed=220;
 
         let vx=0;
 
         let vy=0;
 
-        if(this.keys.left.isDown || this.mobile.left){
+        if(this.moveTarget){
 
-            vx=-speed;
+            const dx=this.moveTarget.x-this.player.x;
 
-        }
+            const dy=this.moveTarget.y-this.player.y;
 
-        if(this.keys.right.isDown || this.mobile.right){
+            const distancia=Math.hypot(dx,dy);
 
-            vx=speed;
+            if(distancia<12){
 
-        }
+                this.moveTarget=null;
 
-        if(this.keys.up.isDown || this.mobile.up){
+                this.player.body.setVelocity(0,0);
 
-            vy=-speed;
+            }else{
 
-        }
+                const nx=dx/distancia;
 
-        if(this.keys.down.isDown || this.mobile.down){
+                const ny=dy/distancia;
 
-            vy=speed;
+                vx=nx*speed;
+
+                vy=ny*speed;
+
+            }
+
+        }else{
+
+            if(this.keys.left.isDown){
+
+                vx=-speed;
+
+            }
+
+            if(this.keys.right.isDown){
+
+                vx=speed;
+
+            }
+
+            if(this.keys.up.isDown){
+
+                vy=-speed;
+
+            }
+
+            if(this.keys.down.isDown){
+
+                vy=speed;
+
+            }
 
         }
 
