@@ -1183,7 +1183,8 @@ export default class GameScene extends Phaser.Scene {
             estilo
 
         )
-        .setInteractive();
+        .setInteractive({ useHandCursor: true })
+        .setOrigin(0.5);
 
         this.btnRight=this.add.text(
 
@@ -1196,7 +1197,8 @@ export default class GameScene extends Phaser.Scene {
             estilo
 
         )
-        .setInteractive();
+        .setInteractive({ useHandCursor: true })
+        .setOrigin(0.5);
 
         this.btnUp=this.add.text(
 
@@ -1209,7 +1211,8 @@ export default class GameScene extends Phaser.Scene {
             estilo
 
         )
-        .setInteractive();
+        .setInteractive({ useHandCursor: true })
+        .setOrigin(0.5);
 
         this.btnDown=this.add.text(
 
@@ -1222,7 +1225,8 @@ export default class GameScene extends Phaser.Scene {
             estilo
 
         )
-        .setInteractive();
+        .setInteractive({ useHandCursor: true })
+        .setOrigin(0.5);
 
         this.mobile={
 
@@ -1269,6 +1273,14 @@ export default class GameScene extends Phaser.Scene {
 
     activarBoton(boton,direccion){
 
+        const soltar = ()=>{
+
+            this.mobile[direccion]=false;
+
+            boton.setScale(1);
+
+        };
+
         boton.on(
 
             "pointerdown",
@@ -1287,13 +1299,7 @@ export default class GameScene extends Phaser.Scene {
 
             "pointerup",
 
-            ()=>{
-
-                this.mobile[direccion]=false;
-
-                boton.setScale(1);
-
-            }
+            soltar
 
         );
 
@@ -1301,13 +1307,56 @@ export default class GameScene extends Phaser.Scene {
 
             "pointerout",
 
+            soltar
+
+        );
+
+        boton.on(
+
+            "pointercancel",
+
+            soltar
+
+        );
+
+        boton.on(
+
+            "pointerleave",
+
+            soltar
+
+        );
+
+        boton.on(
+
+            "touchstart",
             ()=>{
 
-                this.mobile[direccion]=false;
+                this.mobile[direccion]=true;
 
-                boton.setScale(1);
+                boton.setScale(0.9);
 
-            }
+            },
+
+            this
+
+        );
+
+        boton.on(
+
+            "touchend",
+            soltar,
+
+            this
+
+        );
+
+        boton.on(
+
+            "touchcancel",
+            soltar,
+
+            this
 
         );
 
