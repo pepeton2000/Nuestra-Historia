@@ -316,17 +316,7 @@ export default class GameScene extends Phaser.Scene {
         // EFECTO MÁGICO DEL CORAZÓN
         // ===============================
 
-        this.cameras.main.startFollow(
-
-            this.player,
-
-            true,
-
-            0.08,
-
-            0.08
-
-        );
+        this.cameras.main.setBounds(0, 0, 1000, 1000);
 
         // Luz alrededor del corazón
 
@@ -831,6 +821,105 @@ export default class GameScene extends Phaser.Scene {
 
     }
 
+    mostrarMensajeCentral(mensaje){
+
+        const w = this.cameras.main.width;
+        const h = this.cameras.main.height;
+
+        let cerrado = false;
+
+        const cerrar = ()=>{
+
+            if(cerrado){
+
+                return;
+
+            }
+
+            cerrado = true;
+
+            fondo.off("pointerdown", cerrar);
+
+            fondo.destroy();
+
+            caja.destroy();
+
+            texto.destroy();
+
+        };
+
+        let fondo = this.add.rectangle(
+
+            w/2,
+
+            h/2,
+
+            w,
+
+            h,
+
+            0x000000,
+
+            0.2
+
+        )
+
+        .setInteractive()
+
+        .setDepth(120);
+
+        fondo.on("pointerdown", cerrar, this);
+
+        let caja = this.add.rectangle(
+
+            w/2,
+
+            h/2,
+
+            320,
+
+            140,
+
+            0xffffff,
+
+            0.95
+
+        )
+
+        .setDepth(121);
+
+        let texto = this.add.text(
+
+            w/2,
+
+            h/2,
+
+            mensaje,
+
+            {
+
+                fontSize:"22px",
+
+                color:"#ff4d8d",
+                align:"center",
+                wordWrap:{
+
+                    width:280
+
+                }
+
+            }
+
+        )
+
+        .setOrigin(.5)
+
+        .setDepth(122);
+
+        this.time.delayedCall(3000, cerrar);
+
+    }
+
     recogerRosa(jugador,rosa){
 
         rosa.destroy();
@@ -923,52 +1012,7 @@ export default class GameScene extends Phaser.Scene {
 
         ];
 
-        let mensaje=this.add.text(
-
-            195,
-
-            420,
-
-            frases[this.rosasEncontradas-1],
-
-            {
-
-                fontSize:"22px",
-
-                color:"#ffffff",
-
-                backgroundColor:"#ff4d8d",
-
-                padding:{
-                    x:15,
-                    y:10
-                },
-
-                align:"center"
-
-            }
-
-        )
-
-        .setOrigin(.5);
-
-        this.tweens.add({
-
-            targets:mensaje,
-
-            alpha:0,
-
-            y:350,
-
-            duration:2000,
-
-            onComplete:()=>{
-
-                mensaje.destroy();
-
-            }
-
-        });
+        this.mostrarMensajeCentral(frases[this.rosasEncontradas-1]);
 
         if(
 
@@ -1082,61 +1126,7 @@ export default class GameScene extends Phaser.Scene {
 
         ];
 
-        let cartaGrande=this.add.rectangle(
-
-            195,
-
-            420,
-
-            330,
-
-            250,
-
-            0xffffff
-
-        );
-
-        let texto=this.add.text(
-
-            195,
-
-            420,
-
-            mensajes[this.cartasEncontradas-1],
-
-            {
-
-                fontSize:"23px",
-
-                color:"#9b59b6",
-
-                align:"center",
-
-                wordWrap:{
-
-                    width:280
-
-                }
-
-            }
-
-        )
-
-        .setOrigin(.5);
-
-        this.time.delayedCall(
-
-            3000,
-
-            ()=>{
-
-                cartaGrande.destroy();
-
-                texto.destroy();
-
-            }
-
-        );
+        this.mostrarMensajeCentral(mensajes[this.cartasEncontradas-1]);
 
     }
 
@@ -1485,6 +1475,14 @@ export default class GameScene extends Phaser.Scene {
             vx,
 
             vy
+
+        );
+
+        this.cameras.main.centerOn(
+
+            this.player.x,
+
+            this.player.y
 
         );
 

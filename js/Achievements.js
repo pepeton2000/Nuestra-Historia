@@ -4,6 +4,28 @@ export default class Achievements {
 
         const w = scene.cameras.main.width;
 
+        let cerrado = false;
+
+        const cerrar = ()=>{
+
+            if(cerrado){
+
+                return;
+
+            }
+
+            cerrado = true;
+
+            fondo.off("pointerdown", cerrar);
+
+            fondo.destroy();
+
+            texto.destroy();
+
+            detalle.destroy();
+
+        };
+
         let fondo = scene.add.rectangle(
 
             w/2,
@@ -18,7 +40,11 @@ export default class Achievements {
 
             0.8
 
-        );
+        )
+
+        .setInteractive();
+
+        fondo.on("pointerdown", cerrar, scene);
 
         let texto = scene.add.text(
 

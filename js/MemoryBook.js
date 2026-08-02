@@ -5,6 +5,30 @@ export default class MemoryBook {
         const w = scene.cameras.main.width;
         const h = scene.cameras.main.height;
 
+        let cerrado = false;
+
+        const cerrar = ()=>{
+
+            if(cerrado){
+
+                return;
+
+            }
+
+            cerrado = true;
+
+            fondo.off("pointerdown", cerrar);
+
+            fondo.destroy();
+
+            titulo.destroy();
+
+            contenido.destroy();
+
+            cerrarBtn.destroy();
+
+        };
+
         let fondo = scene.add.rectangle(
 
             w/2,
@@ -19,15 +43,19 @@ export default class MemoryBook {
 
             0.95
 
-        );
+        )
 
-        fondo.setDepth(200);
+        .setInteractive()
+
+        .setDepth(200);
+
+        fondo.on("pointerdown", cerrar, scene);
 
         let titulo = scene.add.text(
 
             w/2,
 
-            100,
+            h/2 - 220,
 
             "📖 Nuestro Diario",
 
@@ -51,7 +79,7 @@ export default class MemoryBook {
 
             w/2,
 
-            300,
+            h/2 + 20,
 
 `
 
@@ -71,7 +99,6 @@ vale más que cualquier tesoro ❤️"
                 fontSize:"24px",
 
                 color:"#ffffff",
-
                 align:"center"
 
             }
@@ -82,11 +109,11 @@ vale más que cualquier tesoro ❤️"
 
         .setDepth(201);
 
-        let cerrar = scene.add.text(
+        let cerrarBtn = scene.add.text(
 
             w/2,
 
-            700,
+            h/2 + 220,
 
             "Cerrar diario ✨",
 
@@ -114,23 +141,7 @@ vale más que cualquier tesoro ❤️"
 
         .setDepth(201);
 
-        cerrar.on(
-
-            "pointerdown",
-
-            ()=>{
-
-                fondo.destroy();
-
-                titulo.destroy();
-
-                contenido.destroy();
-
-                cerrar.destroy();
-
-            }
-
-        );
+        cerrarBtn.on("pointerdown", cerrar, scene);
 
     }
 

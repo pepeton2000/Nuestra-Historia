@@ -5,6 +5,34 @@ export default class Cinematic {
         const w = scene.cameras.main.width;
         const h = scene.cameras.main.height;
 
+        let cerrado = false;
+
+        const cerrar = ()=>{
+
+            if(cerrado){
+
+                return;
+
+            }
+
+            cerrado = true;
+
+            fondo.off("pointerdown", cerrar);
+
+            fondo.destroy();
+
+            textoTitulo.destroy();
+
+            texto.destroy();
+
+            if(timer){
+
+                scene.time.removeEvent(timer);
+
+            }
+
+        };
+
         let fondo = scene.add.rectangle(
 
             w/2,
@@ -19,15 +47,19 @@ export default class Cinematic {
 
             0.85
 
-        );
+        )
 
-        fondo.setDepth(50);
+        .setInteractive()
+
+        .setDepth(50);
+
+        fondo.on("pointerdown", cerrar, scene);
 
         let textoTitulo = scene.add.text(
 
             w/2,
 
-            250,
+            h/2 - 80,
 
             titulo,
 
@@ -37,7 +69,9 @@ export default class Cinematic {
 
                 color:"#ff8fc7",
 
-                fontStyle:"bold"
+                fontStyle:"bold",
+
+                align:"center"
 
             }
 
@@ -51,7 +85,7 @@ export default class Cinematic {
 
             w/2,
 
-            400,
+            h/2 + 20,
 
             mensaje,
 
@@ -93,21 +127,7 @@ export default class Cinematic {
 
         });
 
-        scene.time.delayedCall(
-
-            4000,
-
-            ()=>{
-
-                fondo.destroy();
-
-                textoTitulo.destroy();
-
-                texto.destroy();
-
-            }
-
-        );
+        let timer = scene.time.delayedCall(4000, cerrar);
 
     }
 

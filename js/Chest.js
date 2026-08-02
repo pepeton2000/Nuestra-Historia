@@ -7,6 +7,32 @@ export default class Chest {
 
         scene.physics.pause();
 
+        let cerrado = false;
+
+        const cerrar = ()=>{
+
+            if(cerrado){
+
+                return;
+
+            }
+
+            cerrado = true;
+
+            fondo.off("pointerdown", cerrar);
+
+            fondo.destroy();
+
+            cofre.destroy();
+
+            texto.destroy();
+
+            boton.destroy();
+
+            scene.physics.resume();
+
+        };
+
         let fondo = scene.add.rectangle(
 
             w/2,
@@ -21,15 +47,19 @@ export default class Chest {
 
             0.75
 
-        );
+        )
 
-        fondo.setDepth(300);
+        .setInteractive()
+
+        .setDepth(300);
+
+        fondo.on("pointerdown", cerrar, scene);
 
         let cofre = scene.add.text(
 
             w/2,
 
-            230,
+            h/2 - 110,
 
             "🎁",
 
@@ -63,7 +93,7 @@ export default class Chest {
 
             w/2,
 
-            420,
+            h/2 + 80,
 
             mensaje,
 
@@ -93,7 +123,7 @@ export default class Chest {
 
             w/2,
 
-            650,
+            h/2 + 220,
 
             "Continuar ❤️",
 
@@ -121,25 +151,7 @@ export default class Chest {
 
         .setDepth(301);
 
-        boton.on(
-
-            "pointerdown",
-
-            ()=>{
-
-                fondo.destroy();
-
-                cofre.destroy();
-
-                texto.destroy();
-
-                boton.destroy();
-
-                scene.physics.resume();
-
-            }
-
-        );
+        boton.on("pointerdown", cerrar, scene);
 
     }
 
